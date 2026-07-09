@@ -8,6 +8,10 @@ import type {
   DealerRegisterResponse,
   VerifyOtpRequest,
   VerifyOtpResponse,
+  ForgotPasswordRequest,
+  ForgotPasswordResponse,
+  ResetPasswordRequest,
+  ResetPasswordResponse,
 } from './authApi.types';
 
 export const authApi = baseApi.injectEndpoints({
@@ -40,6 +44,20 @@ export const authApi = baseApi.injectEndpoints({
         body: data,
       }),
     }),
+    forgotPassword: builder.mutation<ForgotPasswordResponse, ForgotPasswordRequest>({
+      query: (data) => ({
+        url: '/accounts/forgot-password/',
+        method: 'POST',
+        body: data,
+      }),
+    }),
+    resetPassword: builder.mutation<ResetPasswordResponse, ResetPasswordRequest>({
+      query: (data) => ({
+        url: '/accounts/reset-password/',
+        method: 'POST',
+        body: data,
+      }),
+    }),
   }),
   overrideExisting: true,
 });
@@ -49,4 +67,7 @@ export const {
   useRegisterSellerMutation,
   useRegisterDealerMutation,
   useVerifyOtpMutation,
+  useForgotPasswordMutation,
+  useResetPasswordMutation,
 } = authApi;
+
