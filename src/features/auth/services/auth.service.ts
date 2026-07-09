@@ -7,6 +7,12 @@ import type {
   VerifyOtpResponse,
   DealerRegisterRequest,
   DealerRegisterResponse,
+  ForgotPasswordRequest,
+  ForgotPasswordResponse,
+  ResetPasswordRequest,
+  ResetPasswordResponse,
+  LogoutRequest,
+  LogoutResponse,
 } from "../types/auth.types";
 
 export async function signIn() {}
@@ -29,7 +35,13 @@ export async function registerDealer(data: DealerRegisterRequest): Promise<Deale
   return response.data;
 }
 
-export async function forgotPassword() {}
+export async function forgotPassword(data: ForgotPasswordRequest): Promise<ForgotPasswordResponse> {
+  const response = await apiClient.post<ForgotPasswordResponse>(
+    ENDPOINTS.auth.forgotPassword,
+    data
+  );
+  return response.data;
+}
 
 export async function verifyOtp(data: VerifyOtpRequest): Promise<VerifyOtpResponse> {
   const response = await apiClient.post<VerifyOtpResponse>(
@@ -39,5 +51,21 @@ export async function verifyOtp(data: VerifyOtpRequest): Promise<VerifyOtpRespon
   return response.data;
 }
 
-export async function resetPassword() {}
+export async function resetPassword(data: ResetPasswordRequest): Promise<ResetPasswordResponse> {
+  const response = await apiClient.post<ResetPasswordResponse>(
+    ENDPOINTS.auth.resetPassword,
+    data
+  );
+  return response.data;
+}
+
+export async function logout(data: LogoutRequest): Promise<LogoutResponse> {
+  const response = await apiClient.post<LogoutResponse>(
+    ENDPOINTS.auth.logout,
+    data
+  );
+  return response.data;
+}
+
+
 

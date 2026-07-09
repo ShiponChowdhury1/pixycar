@@ -12,6 +12,8 @@ import type {
   ForgotPasswordResponse,
   ResetPasswordRequest,
   ResetPasswordResponse,
+  LogoutRequest,
+  LogoutResponse,
 } from './authApi.types';
 
 export const authApi = baseApi.injectEndpoints({
@@ -58,6 +60,13 @@ export const authApi = baseApi.injectEndpoints({
         body: data,
       }),
     }),
+    logout: builder.mutation<LogoutResponse, LogoutRequest>({
+      query: (data) => ({
+        url: '/accounts/logout/',
+        method: 'POST',
+        body: data,
+      }),
+    }),
   }),
   overrideExisting: true,
 });
@@ -69,5 +78,7 @@ export const {
   useVerifyOtpMutation,
   useForgotPasswordMutation,
   useResetPasswordMutation,
+  useLogoutMutation,
 } = authApi;
+
 

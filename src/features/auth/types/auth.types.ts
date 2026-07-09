@@ -53,4 +53,33 @@ export interface DealerRegisterResponse {
   user: AuthUser;
 }
 
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+export interface ForgotPasswordResponse {
+  message: string;
+}
+
+export interface ResetPasswordRequest {
+  email: string;
+  new_password?: string;
+  confirm_password?: string;
+}
+
+export interface ResetPasswordResponse {
+  message: string;
+}
+
+export interface LogoutRequest {
+  refresh: string;
+}
+
+export interface LogoutResponse {
+  message?: string;
+  detail?: string;
+}
+
+
+
 

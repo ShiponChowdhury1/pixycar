@@ -4,9 +4,10 @@ export const ENDPOINTS = {
     signUp: "/auth/sign-up",
     registerSeller: "/accounts/register/seller/",
     registerDealer: "/accounts/register/dealer/",
-    forgotPassword: "/auth/forgot-password",
+    forgotPassword: "/accounts/forgot-password/",
     verifyOtp: "/accounts/verify-otp/",
-    resetPassword: "/auth/reset-password",
+    resetPassword: "/accounts/reset-password/",
+    logout: "/accounts/logout/",
   },
   listings: {
     base: "/listings",

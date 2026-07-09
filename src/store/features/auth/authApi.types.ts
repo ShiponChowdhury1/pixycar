@@ -95,3 +95,13 @@ export interface ResetPasswordResponse {
   message: string;
 }
 
+export interface LogoutRequest {
+  refresh: string;
+}
+
+export interface LogoutResponse {
+  message?: string;
+  detail?: string;
+}
+
+
