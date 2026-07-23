@@ -1,9 +1,11 @@
-"use client";
-
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import type { OfferRowData, SellerListingDetail } from "@/components/seller/my-listings/listings-dummy-data";
 import { OfferRow } from "@/components/seller/my-listings/offer-row";
 import { ConfirmSelectionModal } from "@/components/seller/my-listings/confirm-selection-modal";
+import { useSelectWinningDealerMutation } from "@/store/features/listings/listingsApi";
+import { ROUTES } from "@/constants/routes";
+import { cn } from "@/lib/utils";
 
 type OfferingCompleteViewProps = {
   listing: SellerListingDetail;
@@ -14,27 +16,36 @@ function pickDefaultDealer(offers: OfferRowData[]): OfferRowData | null {
 }
 
 export function OfferingCompleteView({ listing }: OfferingCompleteViewProps) {
+  const router = useRouter();
+  const [selectDealerApi] = useSelectWinningDealerMutation();
   const [showModal, setShowModal] = useState(false);
-  const [selectedDealer, setSelectedDealer] = useState<OfferRowData | null>(() =>
-    pickDefaultDealer(listing.offers)
-  );
+  const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const [toast, setToast] = useState<string | null>(null);
 
+  const selectedDealer = listing.offers[selectedIndex] ?? listing.offers[0] ?? null;
+
   const openConnect = () => {
-    setSelectedDealer((prev) => prev ?? pickDefaultDealer(listing.offers));
     setShowModal(true);
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (!selectedDealer) return;
-    console.log("confirm dealer selection", {
-      listingId: listing.id,
-      dealer: selectedDealer.dealerId,
-      amount: selectedDealer.amount,
-    });
+    if (selectedDealer.dealerNumericId) {
+      try {
+        await selectDealerApi({
+          listingId: listing.id,
+          dealerId: selectedDealer.dealerNumericId,
+        }).unwrap();
+      } catch (err) {
+        console.error("Failed to select dealer:", err);
+      }
+    }
     setShowModal(false);
     setToast("You’re connected with the dealer.");
-    window.setTimeout(() => setToast(null), 3200);
+    window.setTimeout(() => {
+      setToast(null);
+      router.push(ROUTES.seller.messages);
+    }, 1500);
   };
 
   return (
@@ -50,7 +61,7 @@ export function OfferingCompleteView({ listing }: OfferingCompleteViewProps) {
 
       <h1 className="font-hero-heading text-2xl font-bold text-[#1E1E1E] sm:text-3xl">Offering Complete!</h1>
       <p className="mt-2 max-w-xl font-navbar text-sm text-[#5E5E5E] sm:text-base">
-        You received offers from 40 dealers. Select one to start conversations.
+        You received offers from {listing.offersCount || listing.offers.length} dealers. Select one to start conversations.
       </p>
 
       <div className="mt-8 max-w-xl rounded-2xl border border-[#E5E7EB] bg-white p-6 sm:p-8">
@@ -58,22 +69,31 @@ export function OfferingCompleteView({ listing }: OfferingCompleteViewProps) {
           All Offers ({listing.offers.length})
         </h2>
         <div className="mt-4 flex flex-col gap-3">
-          {listing.offers.map((o) => (
-            <button
-              key={o.dealerId}
-              type="button"
-              onClick={() => setSelectedDealer(o)}
-              className="cursor-pointer text-left transition hover:opacity-95"
-            >
-              <OfferRow
-                dealerName={o.dealerId}
-                timeAgo={o.timeAgo}
-                amount={o.amount}
-                isHighest={o.isHighest}
-                layout="stacked"
-              />
-            </button>
-          ))}
+          {listing.offers.map((o, idx) => {
+            const isSelected = selectedIndex === idx;
+
+            return (
+              <button
+                key={o.id ?? `${o.dealerId}-${idx}`}
+                type="button"
+                onClick={() => setSelectedIndex(idx)}
+                className={cn(
+                  "w-full cursor-pointer text-left transition rounded-xl border-2 px-3 py-1.5",
+                  isSelected
+                    ? "border-[#FFA51F] bg-amber-50/50 shadow-sm"
+                    : "border-[#E5E7EB] bg-white hover:border-neutral-300"
+                )}
+              >
+                <OfferRow
+                  dealerName={o.dealerId}
+                  timeAgo={o.timeAgo}
+                  amount={o.amount}
+                  isHighest={o.isHighest}
+                  layout="list"
+                />
+              </button>
+            );
+          })}
         </div>
 
         <button

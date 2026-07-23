@@ -21,8 +21,10 @@ type ListingCardProps = {
 
 function statusBadgeClass(status: ListingStatus) {
   if (status === "Active") return "bg-emerald-500 text-white";
-  if (status === "TimeOver") return "bg-red-100 text-red-600";
-  return "bg-purple-500 text-white";
+  if (status === "TimeOver") return "bg-red-500 text-white";
+  if (status === "Draft") return "bg-[#FFA51F] text-black";
+  if (status === "Sold") return "bg-purple-600 text-white";
+  return "bg-neutral-500 text-white";
 }
 
 function statusLabel(status: ListingStatus) {
@@ -46,6 +48,7 @@ export function ListingCard({ listing }: ListingCardProps) {
           fill
           className="object-cover"
           sizes="(max-width: 768px) 100vw, 33vw"
+          unoptimized
         />
       </div>
       <div className="relative flex flex-1 flex-col p-4 sm:p-5">

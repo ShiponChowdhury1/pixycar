@@ -36,7 +36,7 @@ export default function RootLayout({
       className={`${poppins.variable} ${montserrat.variable}`}
       suppressHydrationWarning
     >
-      <body>
+      <body suppressHydrationWarning>
         <Script src="http://13.61.225.84:3000/widget.js" data-slug="elite-plumbing-pro" strategy="afterInteractive" />
         <Providers>{children}</Providers>
         <ScrollToTopButton />

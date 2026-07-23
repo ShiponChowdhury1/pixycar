@@ -10,10 +10,12 @@ type ListingsFilterProps = {
   onChange: (value: ListingsFilterValue) => void;
 };
 
-const TABS: { label: ListingsFilterValue }[] = [
-  { label: "All" },
-  { label: "Active" },
-  { label: "Sold" },
+const TABS: { label: ListingsFilterValue; display: string }[] = [
+  { label: "All", display: "All" },
+  { label: "Active", display: "Active" },
+  { label: "TimeOver", display: "Time Over" },
+  { label: "Sold", display: "Sold" },
+  { label: "Draft", display: "Draft" },
 ];
 
 export function ListingsFilter({ value, onChange }: ListingsFilterProps) {
@@ -33,7 +35,7 @@ export function ListingsFilter({ value, onChange }: ListingsFilterProps) {
                 : "border border-[#E5E7EB] bg-white text-[#1E1E1E] hover:border-[#FFA51F]/50"
             )}
           >
-            {tab.label}
+            {tab.display}
           </button>
         );
       })}

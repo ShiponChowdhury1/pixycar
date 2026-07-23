@@ -9,6 +9,9 @@ import { ROUTES } from "@/constants/routes";
 import { cn } from "@/lib/utils";
 import { NOTIFICATIONS_EXIST, NotificationPanel } from "@/components/seller/notifications/notification-panel";
 
+import { useAppSelector } from "@/store";
+import { selectCurrentUser } from "@/store/features/auth/authSlice";
+
 const NAV = [
   { label: "Dashboard", href: ROUTES.seller.dashboard },
   { label: "My Listings", href: ROUTES.seller.myListings },
@@ -34,6 +37,10 @@ const linkClass = "font-navbar text-base transition-colors";
 
 export function SellerNavbar() {
   const pathname = usePathname();
+  const user = useAppSelector(selectCurrentUser);
+  const displayName = user?.full_name || user?.name || user?.business_name || (user?.email ? user.email.split("@")[0] : "User");
+  const avatarUrl = user?.avatar || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=96&h=96&fit=crop&crop=face";
+
   const [mobileOpen, setMobileOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const notificationsRef = useRef<HTMLDivElement>(null);
@@ -130,7 +137,7 @@ export function SellerNavbar() {
             onClick={() => setMobileOpen(false)}
           >
             <Image
-              src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=96&h=96&fit=crop&crop=face"
+              src={avatarUrl}
               alt=""
               width={40}
               height={40}
@@ -138,7 +145,7 @@ export function SellerNavbar() {
               unoptimized
             />
             <div className="hidden min-w-0 sm:block">
-              <p className="truncate font-navbar text-sm font-bold text-[#1E1E1E]">James Mitchell</p>
+              <p className="truncate font-navbar text-sm font-bold text-[#1E1E1E]">{displayName}</p>
               <p className="font-navbar text-xs text-[#5E5E5E]">Seller</p>
             </div>
           </Link>

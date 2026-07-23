@@ -1,22 +1,56 @@
 import Link from "next/link";
+import toast from "react-hot-toast";
 import type { SellerListingDetail } from "@/components/seller/my-listings/listings-dummy-data";
 import { ROUTES } from "@/constants/routes";
 import { ImageCarousel } from "@/components/seller/my-listings/image-carousel";
+import { OfferRow } from "@/components/seller/my-listings/offer-row";
+import { useRelistListingMutation } from "@/store/features/listings/listingsApi";
 
 type TimeOverViewProps = {
   listing: SellerListingDetail;
 };
 
 export function TimeOverView({ listing }: TimeOverViewProps) {
+  const [relistListing, { isLoading }] = useRelistListingMutation();
+
+  const handleRelist = async () => {
+    try {
+      const res = await relistListing(Number(listing.id)).unwrap();
+      toast.success(res.message || "Listing successfully relisted!");
+    } catch (err: any) {
+      let msg = "Failed to relist vehicle.";
+      if (err?.data?.detail) msg = err.data.detail;
+      else if (err?.data?.message) msg = err.data.message;
+      toast.error(msg);
+    }
+  };
+
   return (
     <div className="grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-start">
       <div>
         <ImageCarousel images={listing.images} />
         <div className="mt-6 rounded-2xl border border-[#E5E7EB] bg-white p-4 shadow-sm sm:p-6">
-          <h2 className="font-hero-heading text-lg font-bold text-[#1E1E1E] sm:text-xl">All Offers</h2>
-          <div className="flex min-h-[180px] items-center justify-center py-8">
-            <p className="text-center font-navbar text-lg text-[#9CA3AF] sm:text-xl">No offer are here</p>
-          </div>
+          <h2 className="font-hero-heading text-lg font-bold text-[#1E1E1E] sm:text-xl">
+            All Offers {listing.offers.length > 0 ? `(${listing.offers.length})` : ""}
+          </h2>
+          {listing.offers.length > 0 ? (
+            <div className="mt-4 flex flex-col gap-3">
+              {listing.offers.map((o, idx) => (
+                <OfferRow
+                  key={`${o.dealerId}-${idx}`}
+                  dealerName={o.dealerId}
+                  timeAgo={o.timeAgo}
+                  amount={o.amount}
+                  isHighest={o.isHighest}
+                  layout="list"
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="flex min-h-[180px] items-center justify-center py-8">
+              <p className="text-center font-navbar text-lg text-[#9CA3AF] sm:text-xl">No offer are here</p>
+            </div>
+          )}
         </div>
       </div>
 
@@ -33,11 +67,11 @@ export function TimeOverView({ listing }: TimeOverViewProps) {
 
         <div className="my-5 border-t border-[#E5E7EB]" />
 
-        <p className="font-navbar text-sm text-[#5E5E5E]">Time is Over</p>
+        <p className="font-navbar text-sm text-[#5E5E5E]">Time Status</p>
         <div className="mt-1 flex flex-wrap items-baseline gap-2">
-          <span className="font-hero-heading text-3xl font-bold text-[#1E1E1E] sm:text-4xl">13h Ago</span>
+          <span className="font-hero-heading text-3xl font-bold text-[#1E1E1E] sm:text-4xl">Listing Expired</span>
           <span className="font-navbar text-xs text-[#5E5E5E] sm:text-sm">
-            (You Have 24h to again relisting your car)
+            (You have 24h to re-list your car)
           </span>
         </div>
 
@@ -50,12 +84,14 @@ export function TimeOverView({ listing }: TimeOverViewProps) {
         </div>
 
         <div className="mt-6 flex flex-col gap-3">
-          <Link
-            href={ROUTES.seller.listCar}
-            className="flex w-full cursor-pointer items-center justify-center rounded-xl bg-[#FFA51F] py-3.5 font-navbar text-sm font-bold text-white transition hover:bg-[#e8940f] sm:text-base"
+          <button
+            type="button"
+            onClick={handleRelist}
+            disabled={isLoading}
+            className="flex w-full cursor-pointer items-center justify-center rounded-xl bg-[#FFA51F] py-3.5 font-navbar text-sm font-bold text-white transition hover:bg-[#e8940f] disabled:opacity-60 disabled:cursor-not-allowed sm:text-base"
           >
-            Re-list
-          </Link>
+            {isLoading ? "Relisting…" : "Re-list"}
+          </button>
           <Link
             href={ROUTES.seller.listCar}
             className="flex w-full cursor-pointer items-center justify-center rounded-xl border-2 border-[#FFA51F] bg-white py-3.5 font-navbar text-sm font-bold text-[#FFA51F] transition hover:bg-amber-50 sm:text-base"

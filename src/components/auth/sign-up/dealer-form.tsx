@@ -20,6 +20,7 @@ type DealerFormProps = {
   /** Receives the validated form data; parent opens Terms modal then calls the API on Confirm. */
   onSignUpComplete: (data: DealerSignUpInput) => void;
   isLoading?: boolean;
+  initialEmail?: string;
 };
 
 const inputBase = cn(
@@ -43,6 +44,7 @@ export function DealerForm({
   onOpenPrivacy,
   onSignUpComplete,
   isLoading = false,
+  initialEmail = "",
 }: DealerFormProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -58,7 +60,7 @@ export function DealerForm({
     resolver: zodResolver(dealerSignUpSchema),
     defaultValues: {
       businessName: "",
-      businessEmail: "",
+      businessEmail: initialEmail,
       businessPhone: "",
       address: "",
       zip: "",
@@ -69,6 +71,12 @@ export function DealerForm({
     },
     mode: "onTouched",
   });
+
+  useEffect(() => {
+    if (initialEmail) {
+      setValue("businessEmail", initialEmail);
+    }
+  }, [initialEmail, setValue]);
 
   useEffect(() => {
     registerAgreementSetter((value) => {

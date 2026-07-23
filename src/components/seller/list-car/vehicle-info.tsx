@@ -35,7 +35,7 @@ export function VehicleInfo({ defaultValues, onContinue }: VehicleInfoProps) {
       year: "",
       make: "",
       model: "",
-      trim: "EX-L",
+      trim: "",
     },
     mode: "onTouched",
   });
@@ -54,11 +54,11 @@ export function VehicleInfo({ defaultValues, onContinue }: VehicleInfoProps) {
         <div className="space-y-4">
           <div>
             <label className="block font-navbar text-sm font-medium text-[#1E1E1E]">
-              VIN or Registration No.
+              VIN / Registration Number
             </label>
             <input
               type="text"
-              placeholder="1HGBhTOENBFJJGK86"
+              placeholder="e.g. DHAKA-METRO-KA-12-3456"
               className={cn(input, "mt-1.5")}
               {...register("vin")}
             />
@@ -68,31 +68,36 @@ export function VehicleInfo({ defaultValues, onContinue }: VehicleInfoProps) {
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <label className="block font-navbar text-sm font-medium text-[#1E1E1E]">Year</label>
-              <input type="text" inputMode="numeric" placeholder="2020" className={cn(input, "mt-1.5")} {...register("year")} />
+              <input type="text" inputMode="numeric" placeholder="2022" className={cn(input, "mt-1.5")} {...register("year")} />
               <FieldError message={errors.year?.message} />
             </div>
             <div>
               <label className="block font-navbar text-sm font-medium text-[#1E1E1E]">Make</label>
-              <input type="text" placeholder="Honda" className={cn(input, "mt-1.5")} {...register("make")} />
+              <input type="text" placeholder="Toyota" className={cn(input, "mt-1.5")} {...register("make")} />
               <FieldError message={errors.make?.message} />
             </div>
           </div>
 
           <div>
             <label className="block font-navbar text-sm font-medium text-[#1E1E1E]">Model</label>
-            <input type="text" placeholder="Accord" className={cn(input, "mt-1.5")} {...register("model")} />
+            <input type="text" placeholder="Premio" className={cn(input, "mt-1.5")} {...register("model")} />
             <FieldError message={errors.model?.message} />
           </div>
 
           <div>
             <label className="block font-navbar text-sm font-medium text-[#1E1E1E]">Trim</label>
-            <select className={cn(selectClass, "mt-1.5")} {...register("trim")}>
+            <input
+              type="text"
+              list="trim-options"
+              placeholder="e.g. F EX Package, LX, Sport"
+              className={cn(input, "mt-1.5")}
+              {...register("trim")}
+            />
+            <datalist id="trim-options">
               {TRIM_OPTIONS.map((opt) => (
-                <option key={opt} value={opt}>
-                  {opt}
-                </option>
+                <option key={opt} value={opt} />
               ))}
-            </select>
+            </datalist>
             <FieldError message={errors.trim?.message} />
           </div>
         </div>

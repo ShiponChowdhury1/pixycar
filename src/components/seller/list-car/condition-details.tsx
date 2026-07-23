@@ -27,13 +27,21 @@ const selectClass = cn(input, "cursor-pointer bg-white");
 const PRESET_COLORS = [
   { id: "Black" as const, bg: "bg-neutral-900" },
   { id: "White" as const, bg: "bg-white ring-1 ring-[#E5E7EB]" },
+  { id: "Pearl White" as const, bg: "bg-stone-100 ring-1 ring-stone-300" },
   { id: "Gray" as const, bg: "bg-neutral-400" },
   { id: "Silver" as const, bg: "bg-neutral-300" },
   { id: "Blue" as const, bg: "bg-blue-600" },
   { id: "Red" as const, bg: "bg-red-600" },
 ] as const;
 
-const FEATURE_OPTIONS = ["Leather", "Navigation", "Sunroof/Moonroof", "Heated Seats"] as const;
+const FEATURE_OPTIONS = [
+  "Leather Seats",
+  "Sunroof",
+  "Push Start",
+  "Back Camera",
+  "Navigation",
+  "Heated Seats",
+] as const;
 
 function SwitchField({
   checked,
@@ -80,14 +88,14 @@ export function ConditionDetails({ defaultValues, onBack, onContinue }: Conditio
       mileage: "",
       colorPreset: "Silver",
       customColor: "",
-      titleStatus: "Clean",
+      titleStatus: "Clean Title",
       bodyType: "Sedan",
-      drivetrain: "Front Wheel Drive",
-      features: ["Leather"],
+      drivetrain: "Front-Wheel Drive (FWD)",
+      features: ["Leather Seats", "Sunroof"],
       mechanicalCondition: "Excellent",
       ownershipStatus: "Owned",
       numberOfKeys: "2",
-      tireCondition: "Good",
+      tireCondition: "New",
       drivable: true,
       accidentHistory: false,
       shortDescription: "",
@@ -117,7 +125,7 @@ export function ConditionDetails({ defaultValues, onBack, onContinue }: Conditio
         <div className="space-y-5">
           <div>
             <label className="block font-navbar text-sm font-medium text-[#1E1E1E]">Mileage</label>
-            <input type="text" placeholder="45,000" className={cn(input, "mt-1.5")} {...register("mileage")} />
+            <input type="text" placeholder="28,000" className={cn(input, "mt-1.5")} {...register("mileage")} />
             <FieldError message={errors.mileage?.message} />
           </div>
 
@@ -170,7 +178,7 @@ export function ConditionDetails({ defaultValues, onBack, onContinue }: Conditio
             <div>
               <label className="block font-navbar text-sm font-medium text-[#1E1E1E]">Title status</label>
               <select className={cn(selectClass, "mt-1.5")} {...register("titleStatus")}>
-                {(["Clean", "Rebuilt", "Salvage", "Lien"] as const).map((o) => (
+                {(["Clean Title", "Clean", "Like New", "Average", "Need Replacement", "Rebuilt Title", "Salvage Title"] as const).map((o) => (
                   <option key={o} value={o}>
                     {o}
                   </option>
@@ -180,7 +188,7 @@ export function ConditionDetails({ defaultValues, onBack, onContinue }: Conditio
             <div>
               <label className="block font-navbar text-sm font-medium text-[#1E1E1E]">Body Type</label>
               <select className={cn(selectClass, "mt-1.5")} {...register("bodyType")}>
-                {(["Sedan", "SUV", "Hatchback", "Coupe", "Convertible", "Wagon", "Minivan"] as const).map((o) => (
+                {(["Sedan", "SUV", "Hatchback", "Coupe", "Convertible", "Wagon", "Minivan", "Truck", "Van"] as const).map((o) => (
                   <option key={o} value={o}>
                     {o}
                   </option>
@@ -192,7 +200,7 @@ export function ConditionDetails({ defaultValues, onBack, onContinue }: Conditio
           <div>
             <label className="block font-navbar text-sm font-medium text-[#1E1E1E]">DRIVETRAIN</label>
             <select className={cn(selectClass, "mt-1.5")} {...register("drivetrain")}>
-              {(["All Wheel Drive", "Rear Wheel Drive", "Front Wheel Drive"] as const).map((o) => (
+              {(["Front-Wheel Drive (FWD)", "All-Wheel Drive (AWD)", "Four-Wheel Drive (4WD)", "Rear-Wheel Drive (RWD)"] as const).map((o) => (
                 <option key={o} value={o}>
                   {o}
                 </option>
@@ -230,7 +238,7 @@ export function ConditionDetails({ defaultValues, onBack, onContinue }: Conditio
             <div>
               <label className="block font-navbar text-sm font-medium text-[#1E1E1E]">Mechanical Condition</label>
               <select className={cn(selectClass, "mt-1.5")} {...register("mechanicalCondition")}>
-                {(["Excellent", "Good", "Needs attention", "Non-runner"] as const).map((o) => (
+                {(["Excellent", "Good", "Needs Attention", "Non-runner"] as const).map((o) => (
                   <option key={o} value={o}>
                     {o}
                   </option>
@@ -240,7 +248,7 @@ export function ConditionDetails({ defaultValues, onBack, onContinue }: Conditio
             <div>
               <label className="block font-navbar text-sm font-medium text-[#1E1E1E]">Ownership Status</label>
               <select className={cn(selectClass, "mt-1.5")} {...register("ownershipStatus")}>
-                {(["New", "Owned", "Leased", "Financed"] as const).map((o) => (
+                {(["Owned", "Financed", "Leased"] as const).map((o) => (
                   <option key={o} value={o}>
                     {o}
                   </option>
@@ -263,7 +271,7 @@ export function ConditionDetails({ defaultValues, onBack, onContinue }: Conditio
             <div>
               <label className="block font-navbar text-sm font-medium text-[#1E1E1E]">Tire Condition</label>
               <select className={cn(selectClass, "mt-1.5")} {...register("tireCondition")}>
-                {(["New", "Good", "Fair", "Need replacement"] as const).map((o) => (
+                {(["New", "Good", "Used", "Fair", "Need replacement", "Needs Replacement"] as const).map((o) => (
                   <option key={o} value={o}>
                     {o}
                   </option>

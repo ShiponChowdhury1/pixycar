@@ -15,7 +15,11 @@ const inputClass = cn(
   "focus:border-[#FFA51F] focus:ring-2 focus:ring-[#FFA51F]/20"
 );
 
+import { useAppSelector } from "@/store";
+import { selectCurrentUser } from "@/store/features/auth/authSlice";
+
 export default function EditProfilePage() {
+  const user = useAppSelector(selectCurrentUser);
   const [toast, setToast] = useState<string | null>(null);
   const {
     register,
@@ -24,9 +28,9 @@ export default function EditProfilePage() {
   } = useForm<EditProfileInput>({
     resolver: zodResolver(editProfileSchema),
     defaultValues: {
-      fullName: "James Mitchell",
-      phone: "+1 000 0356 656",
-      address: "Los Angeles, CA",
+      fullName: user?.full_name || user?.name || (user?.email ? user.email.split("@")[0] : ""),
+      phone: "",
+      address: "",
     },
     mode: "onTouched",
   });

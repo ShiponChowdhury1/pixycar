@@ -21,7 +21,7 @@ export function ImageCarousel({ images, className }: ImageCarouselProps) {
   return (
     <div className={cn("relative aspect-[16/10] w-full overflow-hidden rounded-2xl bg-neutral-100", className)}>
       {current ? (
-        <Image src={current} alt="" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 55vw" />
+        <Image src={current} alt="" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 55vw" unoptimized />
       ) : null}
       <button
         type="button"

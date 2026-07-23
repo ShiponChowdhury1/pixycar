@@ -67,6 +67,19 @@ export const authApi = baseApi.injectEndpoints({
         body: data,
       }),
     }),
+    verifyDealerInvite: builder.query<{ valid: boolean; email: string }, string>({
+      query: (token) => `/accounts/dealer-invite/verify/?token=${token}`,
+    }),
+    createDealerInvite: builder.mutation<
+      { message: string; token: string; invite_link: string },
+      { email: string }
+    >({
+      query: (data) => ({
+        url: '/accounts/dealer-invite/create/',
+        method: 'POST',
+        body: data,
+      }),
+    }),
   }),
   overrideExisting: true,
 });
@@ -79,6 +92,8 @@ export const {
   useForgotPasswordMutation,
   useResetPasswordMutation,
   useLogoutMutation,
+  useVerifyDealerInviteQuery,
+  useCreateDealerInviteMutation,
 } = authApi;
 
 

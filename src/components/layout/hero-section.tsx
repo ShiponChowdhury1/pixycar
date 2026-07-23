@@ -1,11 +1,19 @@
+"use client";
+
 import Link from "next/link";
+import { useSelector } from "react-redux";
 import { ROUTES } from "@/constants/routes";
 import { cn } from "@/lib/utils";
+import { selectCurrentUser } from "@/store/features/auth/authSlice";
 
 const subtext =
   "PixyCar connects private car sellers directly with verified dealers, so you get real offers from buyers who are ready to close—without the noise.";
 
 export function HeroSection() {
+  const user = useSelector(selectCurrentUser);
+  // Dealers go straight to browse; sellers and guests are prompted to sign in first
+  const browseHref =
+    user?.role === "DEALER" ? ROUTES.browse : ROUTES.auth.signIn;
   return (
     <section className="relative isolate min-h-screen w-full overflow-hidden">
       <div
@@ -62,7 +70,7 @@ export function HeroSection() {
               List Your Car
             </Link>
             <Link
-              href={ROUTES.browse}
+              href={browseHref}
               className={cn(
                 "inline-flex items-center justify-center rounded-lg border border-white px-6 py-3 text-center text-sm font-normal text-white sm:text-base",
                 "bg-transparent transition-colors hover:bg-white/10"
@@ -79,11 +87,11 @@ export function HeroSection() {
             )}
           >
             <p className="font-navbar text-center text-base sm:text-left">
-              <strong className="font-bold text-3xl">12,000+</strong>
+              <strong className="font-bold text-3xl">5,000+</strong>
               <p>Cars Listed</p>
             </p>
             <p className="font-navbar text-center text-base sm:text-left">
-              <strong className="font-bold text-3xl">$2.4M</strong>
+              <strong className="font-bold text-3xl">$9.4M</strong>
               <p>Deals Closed</p>
             </p>
             <p className="font-navbar text-center text-base sm:text-left">

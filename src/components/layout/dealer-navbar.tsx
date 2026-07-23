@@ -10,6 +10,9 @@ import { cn } from "@/lib/utils";
 import { NotificationPanel } from "@/components/seller/notifications/notification-panel";
 import { DEALER_NOTIFICATION_ITEMS, DEALER_NOTIFICATIONS_EXIST } from "@/components/dealer/notifications/dealer-notification-items";
 
+import { useAppSelector } from "@/store";
+import { selectCurrentUser } from "@/store/features/auth/authSlice";
+
 const NAV = [
   { label: "Dashboard", href: ROUTES.dealer.dashboard },
   { label: "My Offers", href: ROUTES.dealer.myOffers },
@@ -36,6 +39,10 @@ const linkClass = "font-navbar text-base transition-colors";
 
 export function DealerNavbar() {
   const pathname = usePathname();
+  const user = useAppSelector(selectCurrentUser);
+  const displayName = user?.full_name || user?.name || (user?.email ? user.email.split("@")[0] : "Dealer");
+  const avatarUrl = user?.avatar || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=96&h=96&fit=crop&crop=face";
+
   const [mobileOpen, setMobileOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const notificationsRef = useRef<HTMLDivElement>(null);
@@ -134,7 +141,7 @@ export function DealerNavbar() {
             onClick={() => setMobileOpen(false)}
           >
             <Image
-              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=96&h=96&fit=crop&crop=face"
+              src={avatarUrl}
               alt=""
               width={40}
               height={40}
@@ -142,7 +149,7 @@ export function DealerNavbar() {
               unoptimized
             />
             <div className="hidden min-w-0 sm:block">
-              <p className="truncate font-navbar text-sm font-bold text-[#1E1E1E]">Akash Saha</p>
+              <p className="truncate font-navbar text-sm font-bold text-[#1E1E1E]">{displayName}</p>
               <p className="font-navbar text-xs text-[#5E5E5E]">Dealer</p>
             </div>
           </Link>

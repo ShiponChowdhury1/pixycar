@@ -1,29 +1,29 @@
 import { z } from "zod";
 
 export const vehicleInfoSchema = z.object({
-  vin: z.string().trim().min(5, "VIN or registration must be at least 5 characters"),
+  vin: z.string().trim().min(3, "VIN or registration number must be at least 3 characters"),
   year: z.string().trim().regex(/^\d{4}$/, "Enter a valid 4-digit year"),
   make: z.string().trim().min(1, "Make is required"),
   model: z.string().trim().min(1, "Model is required"),
-  trim: z.enum(["LX", "Sport", "EX-L", "Touring"], { message: "Select a trim" }),
+  trim: z.string().trim().min(1, "Trim is required"),
 });
 
 export type VehicleInfoValues = z.infer<typeof vehicleInfoSchema>;
 
-export const TRIM_OPTIONS = ["LX", "Sport", "EX-L", "Touring"] as const;
+export const TRIM_OPTIONS = ["LX", "Sport", "EX-L", "Touring", "F EX Package", "LE", "SE"] as const;
 
 export const conditionDetailsSchema = z.object({
   mileage: z.string().trim().min(1, "Mileage is required"),
-  colorPreset: z.enum(["Black", "White", "Gray", "Silver", "Blue", "Red", "custom"]),
+  colorPreset: z.enum(["Black", "White", "Pearl White", "Gray", "Silver", "Blue", "Red", "custom"]),
   customColor: z.string().optional(),
-  titleStatus: z.enum(["Clean", "Rebuilt", "Salvage", "Lien"]),
-  bodyType: z.enum(["Sedan", "SUV", "Hatchback", "Coupe", "Convertible", "Wagon", "Minivan"]),
-  drivetrain: z.enum(["All Wheel Drive", "Rear Wheel Drive", "Front Wheel Drive"]),
+  titleStatus: z.string().min(1, "Title status is required"),
+  bodyType: z.string().min(1, "Body type is required"),
+  drivetrain: z.string().min(1, "Drivetrain is required"),
   features: z.array(z.string()).min(1, "Select at least one option"),
-  mechanicalCondition: z.enum(["Excellent", "Good", "Needs attention", "Non-runner"]),
-  ownershipStatus: z.enum(["New", "Owned", "Leased", "Financed"]),
+  mechanicalCondition: z.string().min(1, "Mechanical condition is required"),
+  ownershipStatus: z.string().min(1, "Ownership status is required"),
   numberOfKeys: z.enum(["1", "2", "3", "4"]),
-  tireCondition: z.enum(["New", "Good", "Fair", "Need replacement"]),
+  tireCondition: z.string().min(1, "Tire condition is required"),
   drivable: z.boolean(),
   accidentHistory: z.boolean(),
   shortDescription: z.string().optional(),

@@ -40,18 +40,24 @@ export function ActiveOffersView({ listing }: ActiveOffersViewProps) {
           <h2 className="font-hero-heading text-lg font-bold text-[#1E1E1E] sm:text-xl">
             All Offers ({listing.offers.length})
           </h2>
-          <div className="mt-2">
-            {listing.offers.map((o) => (
-              <OfferRow
-                key={o.dealerId}
-                dealerName={o.dealerId}
-                timeAgo={o.timeAgo}
-                amount={o.amount}
-                isHighest={o.isHighest}
-                layout="list"
-              />
-            ))}
-          </div>
+          {listing.offers.length > 0 ? (
+            <div className="mt-2">
+              {listing.offers.map((o, idx) => (
+                <OfferRow
+                  key={`${o.dealerId}-${idx}`}
+                  dealerName={o.dealerId}
+                  timeAgo={o.timeAgo}
+                  amount={o.amount}
+                  isHighest={o.isHighest}
+                  layout="list"
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="flex min-h-[160px] items-center justify-center py-8">
+              <p className="text-center font-navbar text-lg text-[#9CA3AF] sm:text-xl">No offer are here</p>
+            </div>
+          )}
         </div>
       </div>
 

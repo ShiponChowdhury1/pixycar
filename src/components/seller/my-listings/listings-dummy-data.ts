@@ -1,9 +1,12 @@
-export type ListingStatus = "Active" | "TimeOver" | "Sold";
+export type ListingStatus = "Active" | "TimeOver" | "Sold" | "Draft";
 
 export type OfferRowData = {
+  id?: number | string;
   dealerId: string;
+  dealerNumericId?: number;
   timeAgo: string;
   amount: string;
+  numericAmount?: number;
   isHighest?: boolean;
 };
 

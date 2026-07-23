@@ -1,8 +1,16 @@
+"use client";
+
 import Image from "next/image";
+import { useAppSelector } from "@/store";
+import { selectCurrentUser } from "@/store/features/auth/authSlice";
 import { SELLER_PROFILE_DUMMY } from "@/components/seller/profile/profile-dummy-data";
 
 export function ProfileCard() {
-  const { name, email, avatar } = SELLER_PROFILE_DUMMY;
+  const user = useAppSelector(selectCurrentUser);
+
+  const name = user?.full_name || user?.name || (user?.email ? user.email.split("@")[0] : SELLER_PROFILE_DUMMY.name);
+  const email = user?.email || SELLER_PROFILE_DUMMY.email;
+  const avatar = user?.avatar || SELLER_PROFILE_DUMMY.avatar;
 
   return (
     <div className="flex flex-col items-center text-center">

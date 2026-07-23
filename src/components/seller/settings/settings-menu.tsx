@@ -7,19 +7,37 @@ import { DeleteAccountModal } from "@/components/seller/settings/delete-account-
 import { SettingsItem } from "@/components/seller/settings/settings-item";
 import { useState } from "react";
 
+import { useAppDispatch, useAppSelector, type RootState } from "@/store";
+import { logout } from "@/store/features/auth/authSlice";
+import { useLogoutMutation } from "@/store/features/auth/authApi";
+import toast from "react-hot-toast";
+
 export function SettingsMenu() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const [logoutApi] = useLogoutMutation();
+  const refreshToken = useAppSelector((state: RootState) => state.auth.refreshToken);
   const [showDelete, setShowDelete] = useState(false);
 
   const handleDeleteConfirm = () => {
-    console.log("account deleted");
     setShowDelete(false);
+    dispatch(logout());
+    toast.success("Account deleted");
     router.push(ROUTES.auth.signIn);
   };
 
-  const handleLogout = () => {
-    console.log("logout");
-    router.push(ROUTES.auth.signIn);
+  const handleLogout = async () => {
+    try {
+      if (refreshToken) {
+        await logoutApi({ refresh: refreshToken }).unwrap();
+      }
+    } catch {
+      // ignore network errors on logout
+    } finally {
+      dispatch(logout());
+      toast.success("Logged out successfully");
+      router.push(ROUTES.auth.signIn);
+    }
   };
 
   return (

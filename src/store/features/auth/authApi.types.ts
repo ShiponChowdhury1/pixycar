@@ -6,6 +6,7 @@ export interface AuthUser {
   role: UserRole;
   full_name?: string;
   name?: string;
+  business_name?: string;
   avatar?: string | null;
 }
 
@@ -42,6 +43,7 @@ export interface SellerRegisterResponse {
 }
 
 export interface DealerRegisterRequest {
+  invite_token?: string;
   email: string;
   password?: string;
   confirm_password?: string;
@@ -60,6 +62,22 @@ export interface DealerRegisterResponse {
     email: string;
     role: 'DEALER';
   };
+}
+
+export interface VerifyDealerInviteResponse {
+  valid: boolean;
+  email: string;
+  message?: string;
+}
+
+export interface CreateDealerInviteRequest {
+  email: string;
+}
+
+export interface CreateDealerInviteResponse {
+  message: string;
+  token: string;
+  invite_link: string;
 }
 
 export interface VerifyOtpRequest {

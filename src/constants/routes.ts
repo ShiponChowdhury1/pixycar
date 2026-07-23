@@ -4,6 +4,7 @@ export const ROUTES = {
   auth: {
     signIn: "/sign-in",
     signUp: "/sign-up",
+    dealerInvite: "/dealer-invite",
     forgotPassword: "/forgot-password",
     verifyOtp: "/verify-otp",
     resetPassword: "/reset-password",
