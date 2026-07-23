@@ -149,7 +149,7 @@ export function DealerNavbar() {
               unoptimized
             />
             <div className="hidden min-w-0 sm:block">
-              <p className="truncate font-navbar text-sm font-bold text-[#1E1E1E]">{displayName}</p>
+              <p suppressHydrationWarning className="truncate font-navbar text-sm font-bold text-[#1E1E1E]">{displayName}</p>
               <p className="font-navbar text-xs text-[#5E5E5E]">Dealer</p>
             </div>
           </Link>

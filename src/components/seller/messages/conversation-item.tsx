@@ -24,6 +24,13 @@ export function ConversationItem({ conversation, isSelected, onSelect }: Convers
   const imageUrl = isDealerInbox ? conversation.sellerImage : conversation.dealerImage;
   const carClass = isDealerInbox ? "text-teal-600" : "text-[#FFA51F]";
 
+  const displayLastMessage =
+    typeof conversation.lastMessage === "string"
+      ? conversation.lastMessage
+      : typeof conversation.lastMessage === "object" && conversation.lastMessage !== null
+      ? (conversation.lastMessage as any).text || (conversation.lastMessage as any).content || (conversation.lastMessage as any).message || "No messages yet"
+      : "No messages yet";
+
   return (
     <button
       type="button"
@@ -59,7 +66,7 @@ export function ConversationItem({ conversation, isSelected, onSelect }: Convers
           <span className="truncate font-navbar text-sm font-bold text-[#1E1E1E] sm:text-base">{title}</span>
           <span className="shrink-0 font-navbar text-xs text-[#5E5E5E]">{conversation.time}</span>
         </div>
-        <p className="mt-0.5 truncate font-navbar text-xs text-[#5E5E5E] sm:text-sm">{conversation.lastMessage}</p>
+        <p className="mt-0.5 truncate font-navbar text-xs text-[#5E5E5E] sm:text-sm">{displayLastMessage}</p>
         <p className={cn("mt-1 font-navbar text-xs font-medium sm:text-sm", carClass)}>{conversation.carName}</p>
       </div>
     </button>

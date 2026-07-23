@@ -34,6 +34,17 @@ export const listingsApi = baseApi.injectEndpoints({
       query: (id) => `/marketplace/listings/${id}/offers/`,
       providesTags: (_result, _error, id) => [{ type: 'Listings', id: `OFFERS_${id}` }],
     }),
+    confirmWinner: builder.mutation<{ message: string; thread_id?: number }, { listingId: number | string; dealerId?: number; offerId?: number | string }>({
+      query: ({ listingId, dealerId, offerId }) => ({
+        url: `/marketplace/listings/${listingId}/confirm-winner/`,
+        method: 'POST',
+        body: {
+          ...(dealerId ? { dealer_id: dealerId } : {}),
+          ...(offerId ? { offer_id: offerId } : {}),
+        },
+      }),
+      invalidatesTags: (_res, _err, { listingId }) => [{ type: 'Listings', id: listingId }, 'Communication'],
+    }),
     selectWinningDealer: builder.mutation<{ message: string }, { listingId: number | string; dealerId: number }>({
       query: ({ listingId, dealerId }) => ({
         url: `/marketplace/listings/${listingId}/select-dealer/`,
@@ -69,5 +80,6 @@ export const {
   useGetListingByIdQuery,
   useGetListingOffersQuery,
   useSelectWinningDealerMutation,
+  useConfirmWinnerMutation,
   useRelistListingMutation,
 } = listingsApi;

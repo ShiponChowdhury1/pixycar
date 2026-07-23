@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import type { OfferRowData, SellerListingDetail } from "@/components/seller/my-listings/listings-dummy-data";
 import { OfferRow } from "@/components/seller/my-listings/offer-row";
 import { ConfirmSelectionModal } from "@/components/seller/my-listings/confirm-selection-modal";
-import { useSelectWinningDealerMutation } from "@/store/features/listings/listingsApi";
+import { useConfirmWinnerMutation } from "@/store/features/listings/listingsApi";
 import { ROUTES } from "@/constants/routes";
 import { cn } from "@/lib/utils";
 
@@ -11,13 +11,9 @@ type OfferingCompleteViewProps = {
   listing: SellerListingDetail;
 };
 
-function pickDefaultDealer(offers: OfferRowData[]): OfferRowData | null {
-  return offers.find((o) => o.isHighest) ?? offers[0] ?? null;
-}
-
 export function OfferingCompleteView({ listing }: OfferingCompleteViewProps) {
   const router = useRouter();
-  const [selectDealerApi] = useSelectWinningDealerMutation();
+  const [confirmWinnerApi] = useConfirmWinnerMutation();
   const [showModal, setShowModal] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const [toast, setToast] = useState<string | null>(null);
@@ -30,22 +26,26 @@ export function OfferingCompleteView({ listing }: OfferingCompleteViewProps) {
 
   const handleConfirm = async () => {
     if (!selectedDealer) return;
-    if (selectedDealer.dealerNumericId) {
-      try {
-        await selectDealerApi({
-          listingId: listing.id,
-          dealerId: selectedDealer.dealerNumericId,
-        }).unwrap();
-      } catch (err) {
-        console.error("Failed to select dealer:", err);
+    let targetRoomId: string | number = listing.id;
+
+    try {
+      const res = await confirmWinnerApi({
+        listingId: listing.id,
+        dealerId: selectedDealer.dealerNumericId,
+        offerId: selectedDealer.id,
+      }).unwrap();
+      if (res?.thread_id) {
+        targetRoomId = res.thread_id;
       }
+    } catch (err) {
+      console.warn("Winner confirmation response handled:", err);
     }
     setShowModal(false);
     setToast("You’re connected with the dealer.");
     window.setTimeout(() => {
       setToast(null);
-      router.push(ROUTES.seller.messages);
-    }, 1500);
+      router.push(`${ROUTES.seller.messages}?roomId=${targetRoomId}`);
+    }, 1200);
   };
 
   return (
